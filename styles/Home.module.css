@@ -71,3 +71,19 @@
   min-width: 250px;
 }
 
+.cardLayout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 2em;
+}
+
+.card {
+  justify-content: center;
+}
+
+.h2 {
+  font-size: 2.25em;
+  line-height: 2;
+  margin-top: 1em;
+  color: var(--text-white-100);
+}
