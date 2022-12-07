@@ -5,11 +5,38 @@ import heroImage from "/public/static/hero-image.png";
 import Banner from "../component/banner";
 import Card from "../component/card";
 import { fetchCoffeeStores } from "../lib/coffee-store";
+import { useTrackLocation } from "../hooks/use-track-location";
+import React from "react";
 
 export default function Home(props: Record<string, Record<string, string>[]>) {
   const { coffeeStores } = props;
+  const { locationErrorMsg, latLong, handleTrackLocation, isFindingLocation } =
+    useTrackLocation();
+
+  // client-side rendering of stores near the user if latLong has been updated
+  React.useEffect(() => {
+    async function getClientCoffeeStores() {
+      if (latLong) {
+        try {
+          const fetchedCoffeeStores = await fetchCoffeeStores(
+            latLong,
+            undefined,
+            12
+          );
+          console.log({ fetchedCoffeeStores });
+        } catch (error) {
+          // set error
+          console.log({ error });
+        }
+      }
+    }
+
+    getClientCoffeeStores();
+  }, [latLong]);
+  console.log({ latLong, locationErrorMsg });
+
   const handleOnBannerBtnClick = () => {
-    console.log("hi banner button");
+    handleTrackLocation();
   };
 
   return (
@@ -23,9 +50,12 @@ export default function Home(props: Record<string, Record<string, string>[]>) {
       <main className={styles.main}>
         <div className={styles.heroContainer}>
           <Banner
-            buttonText={"View stores nearby"}
+            buttonText={
+              isFindingLocation ? "Locating..." : "View stores nearby"
+            }
             handleOnClick={handleOnBannerBtnClick}
           />
+          {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
           <Image
             className={styles.heroImage}
             src={heroImage}
@@ -36,7 +66,7 @@ export default function Home(props: Record<string, Record<string, string>[]>) {
             fill={false}
           />
           {coffeeStores.length > 0 && (
-            <>
+            <div className={styles.regionWrapper}>
               <h2 className={styles.h2}>Toronto stores</h2>
               <div className={styles.cardLayout}>
                 {coffeeStores.map((coffeeStore) => {
@@ -54,7 +84,7 @@ export default function Home(props: Record<string, Record<string, string>[]>) {
                   );
                 })}
               </div>
-            </>
+            </div>
           )}
         </div>
       </main>
