@@ -28,17 +28,16 @@ export default function Home(props: Record<string, Record<string, string>[]>) {
 		async function getClientCoffeeStores() {
 			if (latLong) {
 				try {
-					const fetchedCoffeeStores = await fetchCoffeeStores(
-						latLong,
-						undefined,
-						12
+					const response = await fetch(
+						`/api/getCoffeeStoresByLocation?latLong=${latLong}&limit=12`
 					);
-					console.log({ fetchedCoffeeStores });
+					const coffeeStores = await response.json();
+
 					contextDispatch({
 						type: ACTION_TYPES.SET_COFFEE_STORES,
-						payload: { coffeeStores: fetchedCoffeeStores },
+						payload: { coffeeStores },
 					});
-					// setClientCoffeeStores(fetchedCoffeeStores);
+					setClientCoffeeStoresError("");
 				} catch (error: unknown) {
 					// set error
 					console.log({ error });
