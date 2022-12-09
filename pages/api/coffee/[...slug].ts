@@ -5,12 +5,10 @@ type Data = {
 	name: string;
 };
 
-const getName = (name: string) => name;
-
 export default function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<Data>
 ) {
 	console.log("res", res);
-	res.status(200).json({ name: getName("John Doe") });
+	res.status(200).json({ name: "I love tea" });
 }

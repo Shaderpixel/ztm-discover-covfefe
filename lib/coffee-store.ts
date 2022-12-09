@@ -37,7 +37,7 @@ const getUrlForCoffeeStores = (
 export const fetchCoffeeStores = async (
 	latLong = "43.68292648169076%2C-79.34346275574839",
 	query = "coffee",
-	limit = 10
+	limit = "10"
 ) => {
 	// get unsplash photos
 	const photos = await getCoffeeStorePhotos();
